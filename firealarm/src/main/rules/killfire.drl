@@ -1,0 +1,50 @@
+package com.perfios.firealarm.rules
+import com.perfios.firealarm.Fire
+import com.perfios.firealarm.Room
+import com.perfios.firealarm.Sprinkler
+import com.perfios.firealarm.Alarm
+
+rule "Everything is safe (No Fire and No Alarm)"
+when
+	not Alarm()
+	not (exists Sprinkler($r : room, isOn))
+then 
+	System.out.println("Everything is okay");
+end
+
+rule "if there is no fire in a given room, and there is a sprinkler on, turn it off"
+when
+	$roomToCheck : Room()
+	not (exists (Fire(room == $roomToCheck)))
+	$sprinkler : Sprinkler(room == $roomToCheck,isOn == true)
+then 
+	modify($sprinkler){setIsOn(false)};
+	System.out.println("Turning the sprinkler off for the room " + $roomToCheck.getName());
+end
+
+rule "if there is no fire, and the alarm is on, switch alarm off"
+when
+	not (exists Fire())
+	$alarm : Alarm()
+then 
+	retract ($alarm);
+	System.out.println("Switching alarm off as no fire exists");
+end
+
+rule "if there is a fire, turn the sprinkler on"
+when
+	Fire($r : room)
+	not (exists Sprinkler(room == $r, isOn == true))
+then 
+	insert (new Sprinkler($r,true));
+	System.out.println("Fire is in " + $r.getName() + ". Turning the sprinkler on");
+end
+
+rule "if sprinkler is switched on, raise alarm"
+when
+	Sprinkler (isOn == true)
+	not (exists Alarm())
+then 
+	insert (new Alarm());
+	System.out.println("Sprinkler is on so Alarm is set");
+end

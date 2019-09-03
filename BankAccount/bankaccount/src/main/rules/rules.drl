@@ -1,0 +1,40 @@
+package com.perfios.bankaccount.rules
+import com.perfios.bankaccount.Account
+import com.perfios.bankaccount.Transaction
+import com.perfios.bankaccount.Block
+import com.perfios.bankaccount.TransactionType
+
+
+
+rule "should deposit money into bank account"
+when
+	$t : Transaction(transactionType == TransactionType.DEPOSIT)
+	$a : Account(accountNo == $t.getAccountNo())
+then
+	modify($a){setBalance($a.getBalance() + $t.getAmount())};
+	retract ($t)
+	System.out.println("After deposit account information - "+$a.toString());
+end
+
+
+rule "should withdraw money from the bank account"
+when
+	$t : Transaction(transactionType == TransactionType.WITHDRAWL)
+	$a : Account(accountNo == $t.getAccountNo())
+	not (Block(account == $a))
+then
+	modify($a){setBalance($a.getBalance() - $t.getAmount())};
+	retract ($t);
+	System.out.println("After withdrawl account information - "+$a.toString());
+end
+
+
+rule "should block account if balance is negative"
+salience 1
+when
+	$a : Account(balance < 0)
+then
+	insertLogical(new Block($a));
+	System.out.println("Account blocked - "+$a.toString());
+end
+
