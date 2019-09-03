@@ -11,6 +11,11 @@ In order to familiarise myself with the Drools language I have spent several wee
 
 This repository contains my full set of working examples.
 
+References
+----------
+* Instant Drools Starter from O'reilly
+* Drools JBoss Rules 5.X Developer's guide
+
 Using Eclipse
 -------------
 Eclipse has a good Drools Plugin which can be installed from: 
