@@ -45,7 +45,11 @@ I decided to lay out my working environment as a maven project rather than a typ
 			<version>1.7.2</version>
 			<scope>runtime</scope>
 
-If you use a Drools project you dont need a pom as maven is not used. The drools runtime pulls in all the drools dependencies you require. The downside of this is that if you wish to use hamcrest/junit etc you need to manually add those jars to the classpath - old school ;-)
+If you use a Drools project you dont need a pom as maven is not used. The drools runtime pulls in all the drools dependencies you require. The downside of this is that if you wish to use hamcrest/junit etc you need to manually add those jars to the classpath - old school ;-)  
+
+Don't forget to add the src/main/rules to the classpath  
+
+Also add the org.eclipse.jdt.core-3.7.1.jar to the classpath  
 
 Summary
 -------
